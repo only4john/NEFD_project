@@ -1,0 +1,7 @@
+.DS_Store .Trashes .Spotlight-V100 ._.DS_Store
+venv/ .venv/ env/ .env/ *.pyc pycache/ *.pyo *.pyd
+*.log *.pbf *.geojson /tmp/
+2024/
+docker-compose.yml *.dockerignore
+.env.local .env.development .env.production
+.vscode/ .idea/ *.swp *.swo
