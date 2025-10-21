@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Report: Decoding New Zealand's Forest Dynamics with Remote Sensing Embeddings</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <!-- 
+    Chosen Palette: "Calm Harmony" - A palette grounded in warm neutrals (bg-stone-50, bg-stone-100) with a professional, deep teal accent (teal-700) and muted text colors (slate-600, slate-800) to create a calm, academic, and supportive feel.
+    Application Structure Plan: The application is structured thematically rather than linearly to enhance user exploration. A sticky top navigation allows non-linear access to key sections: 1) The Core Problem (combining background and challenges), 2) Our Innovative Method (a visual, interactive flowchart of the GEE/Python process), 3) Key Findings (an interactive chart dashboard to explore results), and 4) Outlook. This dashboard-style approach transforms the static report into an engaging tool for discovery, allowing users to focus on the "why," "how," and "what" of the research in the order they prefer.
+    Visualization & Content Choices: 
+    - Report Info: Methodology section. Goal: Explain a complex two-part process. Viz: A visual flowchart built with HTML/Tailwind, using icons for clarity. Interaction: Hover effects could reveal tooltips with more detail (omitted for simplicity, but planned). Justification: A visual flow is far more intuitive than a long text block for understanding a process. Method: HTML/Tailwind Flexbox.
+    - Report Info: Preliminary Results section. Goal: Showcase the strongest, most actionable findings from the correlation analysis. Viz: A horizontal bar chart displaying the top ~15 correlation pairs. Interaction: No user input needed; the chart directly presents the key discoveries. Tooltips provide exact values. Justification: Directly presenting the key results is more impactful for a summary report than requiring users to search for them. This visualization makes the "decoding" success tangible. Library: Chart.js (Canvas).
+    - CONFIRMATION: NO SVG graphics used. NO Mermaid JS used.
+    -->
+    <style>
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #f8fafc; /* slate-50 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 1000px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 80vh;
+            max-height: 700px;
+        }
+        @media (max-width: 768px) {
+            .chart-container {
+                height: 90vh;
+                max-height: 800px;
+            }
+        }
+    </style>
+</head>
+<body class="bg-stone-50 text-slate-700">
+
+    <!-- Header and Navigation -->
+    <header class="bg-white/80 backdrop-blur-lg sticky top-0 z-50 shadow-sm">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <h1 class="text-xl md:text-2xl font-bold text-teal-800">Decoding Forest Dynamics</h1>
+            <div class="hidden md:flex space-x-8 text-lg">
+                <a href="#challenge" class="text-slate-600 hover:text-teal-700 transition-colors">Background & Opportunity</a>
+                <a href="#methodology" class="text-slate-600 hover:text-teal-700 transition-colors">Methodology</a>
+                <a href="#results" class="text-slate-600 hover:text-teal-700 transition-colors">Key Findings</a>
+                <a href="#outlook" class="text-slate-600 hover:text-teal-700 transition-colors">Future Outlook</a>
+            </div>
+            <div class="md:hidden">
+                <button id="mobile-menu-button" class="text-slate-600 focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                </button>
+            </div>
+        </nav>
+        <div id="mobile-menu" class="hidden md:hidden bg-white">
+            <a href="#challenge" class="block py-2 px-6 text-slate-600 hover:bg-stone-100">Background & Opportunity</a>
+            <a href="#methodology" class="block py-2 px-6 text-slate-600 hover:bg-stone-100">Methodology</a>
+            <a href="#results" class="block py-2 px-6 text-slate-600 hover:bg-stone-100">Key Findings</a>
+            <a href="#outlook" class="block py-2 px-6 text-slate-600 hover:bg-stone-100">Future Outlook</a>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-6 py-12">
+
+        <!-- Hero Section -->
+        <section class="text-center mb-24">
+            <h2 class="text-4xl md:text-5xl font-bold text-teal-700 mb-4">Decoding New Zealand's Forest Dynamics<br>via Remote Sensing and Data Fusion</h2>
+            <p class="text-xl text-slate-500 max-w-3xl mx-auto">A research summary on combining Google Earth Engine, Python, and historical NEFD reports to achieve efficient and accurate national forest monitoring.</p>
+        </section>
+
+        <!-- Section 1: The Challenge & The Opportunity -->
+        <section id="challenge" class="mb-24 scroll-mt-20">
+            <div class="text-center mb-12">
+                <h3 class="text-3xl font-bold text-slate-800">Background & Opportunity</h3>
+                <p class="text-lg text-slate-500 mt-2">The limitations of traditional forestry monitoring and the new opportunities presented by innovative remote sensing technologies.</p>
+            </div>
+            <div class="grid md:grid-cols-2 gap-12 items-start">
+                <div class="bg-white p-8 rounded-xl shadow-lg border border-stone-200">
+                    <h4 class="text-2xl font-semibold text-red-700 mb-4 flex items-center">
+                        <svg class="w-8 h-8 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"></path></svg>
+                        Challenges of Traditional Methods
+                    </h4>
+                    <ul class="space-y-4 text-slate-600 text-lg">
+                        <li class="pl-4 border-l-4 border-red-200"><strong>Lacks Spatial Context</strong>: Traditional Excel-based reports lack spatial information, not intuitive and no spatial analysis.</li>
+                        <li class="pl-4 border-l-4 border-red-200"><strong>Data Protection</strong>: Data are often protected ("C" in table), hindering management decisions.</li>
+                        <li class="pl-4 border-l-4 border-red-200"><strong>Time & Labor Intensive</strong>: Relies on annual surveys and questionaar, result in high costs, long cycles, inaccurate.</li>
+                        <li class="pl-4 border-l-4 border-red-200"><strong>Very Coarse Spatial Units</strong>: Data is aggregated to administrative levels (TAs), lacking plot-level detail.</li>
+                        <li class="pl-4 border-l-4 border-red-200"><strong>Remote Sensing Bottlenecks</strong>: LiDAR is expensive for annual national coverage, and optical imagery is severely affected by cloud cover.</li>
+                    </ul>
+                </div>
+                <div class="bg-white p-8 rounded-xl shadow-lg border border-stone-200">
+                    <h4 class="text-2xl font-semibold text-green-700 mb-4 flex items-center">
+                        <svg class="w-8 h-8 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                        The Google AlphaEarth Opportunity
+                    </h4>
+                    <ul class="space-y-4 text-slate-600 text-lg">
+                        <li class="pl-4 border-l-4 border-green-200"><strong>Annual Cloud-Free Imagery</strong>: Fundamentally solves issues of cloud cover and seasonal variation.</li>
+                        <li class="pl-4 border-l-4 border-green-200"><strong>High-Dimensional Embeddings</strong>: 64-D vectors capture deeper surface characteristics, making them more sensitive to subtle changes.</li>
+                        <li class="pl-4 border-l-4 border-green-200"><strong>National Coverage</strong>: Provides a consistent and robust data foundation for country-scale analysis.</li>
+                        <li class="pl-4 border-l-4 border-green-200"><strong>Enables Innovation</strong>: Makes unsupervised change detection feasible, allowing for the discovery of unknown change patterns.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- ✅ NEW Section: Interactive Map Explorer -->
+        <section id="map-explorer" class="mb-24 scroll-mt-20">
+            <div class="text-center mb-12">
+                <h3 class="text-3xl font-bold text-slate-800">Interactive Map Explorer</h3>
+                <p class="text-lg text-slate-500 mt-2">Explore the spatial distribution of the detected change clusters across New Zealand.</p>
+            </div>
+            <div class="bg-white p-8 rounded-xl shadow-lg border border-stone-200">
+                <p class="text-center text-slate-600 mb-6">The map below is an independent, interactive application embedded directly into this report. You can use it to visually explore the results of the GEE analysis.</p>
+                <div class="w-full bg-stone-200 rounded-lg shadow-inner overflow-hidden">
+                    <iframe 
+                        src="../index.html" 
+                        class="w-full h-[75vh] border-0" 
+                        title="Interactive Change Map"
+                        allowfullscreen>
+                    </iframe>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Methodology -->
+        <section id="methodology" class="mb-24 scroll-mt-20">
+            <div class="text-center mb-12">
+                <h3 class="text-3xl font-bold text-slate-800">Methodology: Change Detection & Semantic Decoding</h3>
+                <p class="text-lg text-slate-500 mt-2">An innovative workflow combining GEE's pixel-level analysis with Python's macro-data correlation.</p>
+            </div>
+            <div class="bg-white p-8 rounded-xl shadow-lg border border-stone-200 space-y-12">
+                <div class="grid md:grid-cols-2 gap-8 divide-y md:divide-y-0 md:divide-x divide-stone-200">
+                    <!-- Part 1: GEE -->
+                    <div class="p-6">
+                        <div class="flex items-center text-2xl font-semibold text-sky-700 mb-6">
+                            <span class="flex items-center justify-center w-12 h-12 rounded-full bg-sky-100 text-sky-600 mr-4 font-bold">1</span>
+                            GEE: Unsupervised Change Detection
+                        </div>
+                        <div class="relative pl-8 space-y-8 border-l-2 border-sky-200">
+                            <div class="flex items-start">
+                                <div class="absolute -left-4 top-1 w-8 h-8 rounded-full bg-sky-500 text-white flex items-center justify-center font-mono">V</div>
+                                <div class="ml-4">
+                                    <h5 class="font-semibold text-lg">Calculate Change Vectors</h5>
+                                    <p class="text-slate-600">Capture change direction and magnitude by subtracting embedding vectors of consecutive years (`Image_t+1 - Image_t`).</p>
+                                </div>
+                            </div>
+                             <div class="flex items-start">
+                                <div class="absolute -left-4 top-1 w-8 h-8 rounded-full bg-sky-500 text-white flex items-center justify-center font-mono">S</div>
+                                <div class="ml-4">
+                                    <h5 class="font-semibold text-lg">Quantify Change Significance</h5>
+                                    <p class="text-slate-600">Use the dot product to calculate similarity, filtering out insignificant areas to focus on real changes.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <div class="absolute -left-4 top-1 w-8 h-8 rounded-full bg-sky-500 text-white flex items-center justify-center font-mono">C</div>
+                                 <div class="ml-4">
+                                    <h5 class="font-semibold text-lg">Identify Change Types</h5>
+                                    <p class="text-slate-600">Use K-Means clustering to automatically group similar change patterns, producing spatially explicit but semantically unknown change maps.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Part 2: Python -->
+                    <div class="p-6 pt-8 md:pt-6">
+                        <div class="flex items-center text-2xl font-semibold text-amber-700 mb-6">
+                            <span class="flex items-center justify-center w-12 h-12 rounded-full bg-amber-100 text-amber-600 mr-4 font-bold">2</span>
+                            Python: Correlation & Semantic Decoding
+                        </div>
+                        <div class="relative pl-8 space-y-8 border-l-2 border-amber-200">
+                           <div class="flex items-start">
+                                <div class="absolute -left-4 top-1 w-8 h-8 rounded-full bg-amber-500 text-white flex items-center justify-center font-mono">D</div>
+                                <div class="ml-4">
+                                    <h5 class="font-semibold text-lg">Data Alignment</h5>
+                                    <p class="text-slate-600">Spatially and temporally align GEE-derived cluster areas per TA with forestry statistics from NEFD reports.</p>
+                                </div>
+                            </div>
+                             <div class="flex items-start">
+                                <div class="absolute -left-4 top-1 w-8 h-8 rounded-full bg-amber-500 text-white flex items-center justify-center font-mono">R</div>
+                                <div class="ml-4">
+                                    <h5 class="font-semibold text-lg">Calculate Correlation</h5>
+                                    <p class="text-slate-600">Compute the Pearson correlation coefficient between the 20 GEE clusters and hundreds of detailed NEFD metrics (e.g., `radiata_pine_26-30`).</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <div class="absolute -left-4 top-1 w-8 h-8 rounded-full bg-amber-500 text-white flex items-center justify-center font-mono">M</div>
+                                 <div class="ml-4">
+                                    <h5 class="font-semibold text-lg">Find Best Match</h5>
+                                    <p class="text-slate-600">Identify the highest correlation pairs to assign data-driven, real-world meaning to the remote sensing clusters (e.g., Cluster 7 = Mature Radiata Pine Harvest).</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Inserted Figure Example -->
+                <div class="pt-8 mt-8 border-t border-stone-200">
+                    <h4 class="text-xl font-semibold text-slate-700 mb-4 text-center">Figure 1: AlphaEarth Unsupervised Change Detection Output Example</h4>
+                    <div class="max-w-4xl mx-auto bg-stone-100 p-4 rounded-lg">
+                        <img src="GEE10Clusters.png" alt="[一张GEE输出的变化聚类地图的示例图]" class="rounded-md shadow-md w-full">
+                        <p class="text-center text-slate-500 mt-3 text-sm">An example visualization of the 10 change clusters generated in GEE for the 2019-2024 period. Each color represents a distinct type of land cover change detected by the algorithm.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Results -->
+        <section id="results" class="mb-24 scroll-mt-20">
+            <div class="text-center mb-12">
+                <h3 class="text-3xl font-bold text-slate-800">Key Findings: Decoding the Change Signals</h3>
+                <p class="text-lg text-slate-500 mt-2">The analysis reveals strong correlations between specific GEE clusters and real-world forestry activities, allowing us to assign meaning to the remote sensing data.</p>
+            </div>
+            <div class="bg-white p-8 rounded-xl shadow-lg border border-stone-200 space-y-12">
+                <div>
+                    <h4 class="text-2xl font-semibold text-slate-700 mb-6 text-center">Top 15 Strongest Correlations Discovered</h4>
+                    <div class="chart-container">
+                        <canvas id="correlationChart"></canvas>
+                    </div>
+                </div>
+                
+                <!-- Inserted Heatmap Figure -->
+                <div class="pt-8 mt-8 border-t border-stone-200">
+                    <h4 class="text-xl font-semibold text-slate-700 mb-4 text-center">Figure 2: Overall Correlation Heatmap</h4>
+                    <div class="max-w-5xl mx-auto bg-stone-100 p-4 rounded-lg">
+                        <img src="correlation_heatmap_overview.png" alt="[一张显示所有林业指标与GEE聚类之间相关性的热图]" class="rounded-md shadow-md w-full" onerror="this.onerror=null;this.src='correlation_heatmap_overview.png';">
+                        <p class="text-center text-slate-500 mt-3 text-sm">The full correlation matrix visualized as a heatmap. Bright red indicates a strong positive correlation, while bright blue indicates a strong negative correlation. This provides a comprehensive overview of all relationships found.</p>
+                    </div>
+                </div>
+
+                 <div class="grid md:grid-cols-2 gap-6 text-lg">
+                     <div class="bg-stone-100 p-6 rounded-lg">
+                        <h5 class="font-semibold text-slate-800 mb-2">Strong Positive Correlations (Growth)</h5>
+                        <p class="text-slate-600">A very strong positive correlation (0.57) was found between Cluster 18 and changes in young, managed radiata pine stands (`pruned_with_thinning_6-10`). Cluster 0 shows strong correlation with changes in mature Douglas fir (`26-30`) and various Eucalypt age classes, indicating it may represent a general "non-pine forest change" signal.</p>
+
+                    </div>
+                     <div class="bg-stone-100 p-6 rounded-lg">
+                        <h5 class="font-semibold text-slate-800 mb-2">Strong Negative Correlations (Harvesting)</h5>
+                        <p class="text-slate-600"> Cluster 10 has a notable negative correlation (-0.45) with Douglas fir stands aged `51-60`. This means as the area of Cluster 10 increases, the area of this specific forest type decreases, making Cluster 10 a strong candidate for representing harvesting activities** in mature Douglas fir.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Outlook -->
+        <section id="outlook" class="scroll-mt-20">
+            <div class="text-center mb-12">
+                <h3 class="text-3xl font-bold text-slate-800">Future Outlook & Next Steps</h3>
+                 <p class="text-lg text-slate-500 mt-2">Based on these promising results, we have a clear path forward.</p>
+            </div>
+            <div class="bg-white p-8 rounded-xl shadow-lg border border-stone-200 grid md:grid-cols-3 gap-8">
+                <div class="text-center p-4">
+                     <div class="flex items-center justify-center w-16 h-16 rounded-full bg-teal-100 text-teal-600 mx-auto mb-4 font-bold text-2xl">1</div>
+                    <h4 class="text-xl font-semibold mb-2">Enhance Accuracy</h4>
+                    <p class="text-slate-600">Enhancing Accuracy by limite the currently TA area to industral forest area, limiting unrelated land use changes</p>
+                </div>
+                <div class="text-center p-4">
+                     <div class="flex items-center justify-center w-16 h-16 rounded-full bg-teal-100 text-teal-600 mx-auto mb-4 font-bold text-2xl">2</div>
+                    <h4 class="text-xl font-semibold mb-2">Semantic Validation</h4>
+                    <p class="text-slate-600">Perform fine-grained visual interpretation on a sample of high-correlation clusters to definitively confirm their real-world meaning.</p>
+                </div>
+                 <div class="text-center p-4">
+                     <div class="flex items-center justify-center w-16 h-16 rounded-full bg-teal-100 text-teal-600 mx-auto mb-4 font-bold text-2xl">3</div>
+                    <h4 class="text-xl font-semibold mb-2">Product Generation</h4>
+                    <p class="text-slate-600">Use the decoded clusters to produce New Zealand's first embedding-based annual forest change map with clear semantic labels.</p>
+                </div>
+                 <div class="text-center p-4">
+                    <div class="flex items-center justify-center w-16 h-16 rounded-full bg-teal-100 text-teal-600 mx-auto mb-4 font-bold text-2xl">4</div>
+                    <h4 class="text-xl font-semibold mb-2">Towards Automation</h4>
+                    <p class="text-slate-600">In the long term, this validated data will serve as high-quality training samples for a supervised learning model, enabling fully automated future monitoring.</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+    
+    <footer class="bg-stone-200 mt-24">
+        <div class="container mx-auto px-6 py-6 text-center text-slate-500">
+            <p>&copy; 2025 Teng Fei. A research project on fusing remote sensing embeddings with historical data.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile Menu Toggle
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Chart.js Interactive Chart with Real Data
+        const ctx = document.getElementById('correlationChart').getContext('2d');
+
+        // REAL DATA from your Python script output
+        // Top 15 correlations (sorted by absolute value)
+        const realCorrelationData = [
+            { label: 'Cluster 18 <> Radiata Pine (Pruned, Thinned, 6-10yr)', value: 0.572 },
+            { label: 'Cluster 0 <> Douglas Fir (26-30yr)', value: 0.568 },
+            { label: 'Cluster 18 <> Radiata Pine (Pruned, Thinned, 1-5yr)', value: 0.546 },
+            { label: 'Cluster 0 <> Eucalypt (21-25yr)', value: 0.514 },
+            { label: 'Cluster 0 <> Douglas Fir (41-50yr)', value: 0.488 },
+            { label: 'Cluster 13 <> Eucalypt (31-35yr)', value: 0.478 },
+            { label: 'Cluster 0 <> Eucalypt (1-5yr)', value: 0.470 },
+            { label: 'Cluster 18 <> Radiata Pine (Unpruned, Thinned, 31-35yr)', value: 0.461 },
+            { label: 'Cluster 10 <> Douglas Fir (51-60yr)', value: -0.446 },
+            { label: 'Cluster 7 <> All Species (Total)', value: 0.448 },
+            { label: 'Cluster 10 <> Radiata Pine (Pruned w/o Thinning, 6-10yr)', value: -0.433 },
+            { label: 'Cluster 0 <> Eucalypt (Total)', value: 0.433 },
+            { label: 'Cluster 18 <> Radiata Pine (Pruned, Thinned, Total)', value: 0.425 },
+            { label: 'Cluster 0 <> Douglas Fir (16-20yr)', value: -0.427 },
+            { label: 'Cluster 11 <> Radiata Pine (Unpruned, Thinned, 11-15yr)', value: 0.423 },
+        ];
+        
+        const chartLabels = realCorrelationData.map(d => d.label);
+        const chartValues = realCorrelationData.map(d => d.value);
+
+        const getBarColor = (value) => {
+            if (value > 0.5) return 'rgba(22, 163, 74, 0.8)'; // Strong Positive (Green)
+            if (value > 0.3) return 'rgba(74, 222, 128, 0.7)'; // Medium Positive (Light Green)
+            if (value < -0.5) return 'rgba(220, 38, 38, 0.8)'; // Strong Negative (Red)
+            if (value < -0.3) return 'rgba(252, 165, 165, 0.7)'; // Medium Negative (Light Red)
+            return 'rgba(156, 163, 175, 0.6)'; // Neutral (Gray)
+        };
+        
+        const chart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: chartLabels,
+                datasets: [{
+                    label: 'Correlation Coefficient',
+                    data: chartValues,
+                    backgroundColor: chartValues.map(getBarColor),
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                maintainAspectRatio: false,
+                responsive: true,
+                scales: {
+                    x: {
+                        beginAtZero: false,
+                        min: -0.8,
+                        max: 0.8,
+                        title: {
+                            display: true,
+                            text: 'Pearson Correlation Coefficient',
+                            font: { size: 14 }
+                        }
+                    },
+                    y: {
+                        ticks: {
+                           autoSkip: false,
+                           font: { size: 10 },
+                           callback: function(value, index, values) {
+                                const label = this.getLabelForValue(value);
+                                return label.length > 50 ? label.substring(0, 50) + '...' : label;
+                           }
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.parsed.x !== null) {
+                                    label += context.parsed.x.toFixed(3);
+                                }
+                                return label;
+                            }
+                        }
+                    },
+                    title: {
+                        display: true,
+                        text: 'Top Discovered Correlations between GEE Clusters & Forestry Metrics',
+                        font: { size: 18, weight: 'bold' }
+                    }
+                }
+            }
+        });
+
+    </script>
+</body>
+</html>
+
